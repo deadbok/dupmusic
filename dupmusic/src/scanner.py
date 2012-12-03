@@ -5,6 +5,7 @@ Functions to scan directories for duplicates.
 @author: oblivion
 '''
 import os
+from hsaudiotag import auto
 
 def listdirs(directory):
     '''list files in directory and sub directories.'''
@@ -32,8 +33,12 @@ class Dup(object):
         self.size = 0
         self.extension = ''
         self.uniqueName = ''
+        self.duration = ''
 
-def collect_files(directory):
+def callback(parent=None, filename=''):
+    print(filename)
+
+def collect_files(directory, case_sensitive=True):
     '''Create a list of possibly duplicate files.0'''
     files = listdirs(directory)
     # Use a set to detect duplicates
@@ -43,23 +48,34 @@ def collect_files(directory):
 
     # Run through all files
     for filename in files:
+        callback(filename)
         # Ignore directories
         if not os.path.isdir(filename):
             # Remove extension
             (noext, _) = os.path.splitext(filename)
             # Remove path
-            name = os.path.basename(noext).strip().lower()
+            if case_sensitive:
+                name = os.path.basename(noext).strip()
+            else:
+                name = os.path.basename(noext).strip().lower()
             if name in unique_files:
                 # Save data
                 dup = Dup()
                 dup.fullpath = filename
                 dup.size = os.path.getsize(filename)
                 (_, dup.extension) = os.path.splitext(filename)
+                # metadata
+                tag = auto.File(filename)
+                dup.duration = tag.duration
 
                 # If we are the first
                 if name not in dups:
                     dups[name] = list()
                     # Add first occurrence
+                    # metadata
+                    tag = auto.File(firsts[name].fullpath)
+                    firsts[name].duration = tag.duration
+
                     dups[name].append(firsts[name])
                 # Add duplicate
                 dups[name].append(dup)

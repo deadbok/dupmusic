@@ -5,11 +5,12 @@ Scan a music collection for possible duplicates.
 @author: oblivion
 '''
 import sys
+import datetime
 import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
@@ -26,6 +27,8 @@ class Form(QtGui.QWidget):
 
         # Go click
         self.connect(self.gui.goButton, QtCore.SIGNAL('clicked()'), self.scan)
+        # Browse click
+        self.connect(self.gui.browseButton, QtCore.SIGNAL('clicked()'), self.directoryBrowse)
         # Dup select
         self.connect(self.gui.dupWidget, QtCore.SIGNAL('currentItemChanged (QListWidgetItem *,QListWidgetItem *)'), self.updateFileWidget)
         # File select
@@ -56,20 +59,32 @@ class Form(QtGui.QWidget):
             self.gui.detailsBrowser.setHtml('<p>Size: ' + str(item.size)
                                             + '<br />Ext: ' + item.extension
                                             + '<br />Unique path: '
-                                            + item.uniqueName + '</p>')
+                                            + item.uniqueName
+                                            + '<br />Duration: '
+                                            + str(datetime.timedelta(seconds=item.duration)) + '</p>')
+
+    def callback(self, filename):
+        self.gui.statusLabel.setText(filename)
+        self.gui.statusLabel.repaint()
 
     def scan(self):
         '''Scan a directory.'''
         self.gui.statusLabel.setText('Scanning...')
-        self.gui.statusLabel.show()
         directory = self.gui.pathEdit.text()
+        scanner.callback = self.callback
         try:
-            self.files = scanner.collect_files(directory)
+            self.files = scanner.collect_files(directory, self.gui.caseSense.checkState())
             self.updateDupWidget()
         except OSError as exception:
             QtGui.QMessageBox.critical(self, 'Error!', str(exception))
-        self.gui.statusLabel.setText('')
+        self.gui.statusLabel.setText('Done.')
 
+    def directoryBrowse(self):
+        filename = QtGui.QFileDialog.getExistingDirectory(parent=self,
+                                                          caption='Select directory.',
+                                                          directory=self.gui.pathEdit.text(),
+                                                          options=QtGui.QFileDialog.ShowDirsOnly)
+        self.gui.pathEdit.setText(filename)
 
 
 class QDup(scanner.Dup, QtGui.QListWidgetItem):
@@ -83,6 +98,7 @@ class QDup(scanner.Dup, QtGui.QListWidgetItem):
         self.size = dup.size
         self.extension = dup.extension
         self.uniqueName = dup.uniqueName
+        self.duration = dup.duration
 
         self.setText(self.fullpath)
 
