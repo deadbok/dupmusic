@@ -10,7 +10,7 @@ import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
@@ -25,6 +25,7 @@ class Form(QtGui.QWidget):
         # PyQt4 GUI
         self.gui = gui.Ui_Form()
         self.gui.setupUi(self)
+        self.callbacks = 0
 
         self.gui.pathEdit.setText('/media/7c06c506-b8da-48b2-a5b2-d6a5dabd2e2e/Music.mix')
 
@@ -80,7 +81,11 @@ class Form(QtGui.QWidget):
         '''Callback from scanner with current file name.'''
         # Update label and repaint
         self.gui.statusLabel.setText(filename)
-        self.gui.statusLabel.repaint()
+        # Don't repaint every time
+        if self.callbacks == 10:
+            self.gui.statusLabel.repaint()
+            self.callbacks = -1
+        self.callbacks += 1
 
     def scan(self):
         '''Scan a directory.'''
