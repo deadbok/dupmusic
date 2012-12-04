@@ -10,19 +10,19 @@ import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
     def __init__(self, parent=None):
         '''Init the main window.'''
         super(Form, self).__init__(parent)
-        #Duplicates
+        # Duplicates
         self.files = None
-        #Selected files
+        # Selected files
         self.selected = dict()
 
-        #PyQt4 GUI
+        # PyQt4 GUI
         self.gui = gui.Ui_Form()
         self.gui.setupUi(self)
 
@@ -54,19 +54,19 @@ class Form(QtGui.QWidget):
 
     def updateFileWidget(self, item):
         '''Update file list.'''
-        #Clear the list
+        # Clear the list
         self.gui.filesWidget.clear()
-        #Loop over duplicates if any files
+        # Loop over duplicates if any files
         if self.files != None:
             for dup in self.files[item.text()]:
-                #Cast to our binding class
+                # Cast to our binding class
                 item = QDup(dup)
                 self.gui.filesWidget.addItem(item)
 
     def updateDetailsBrowser(self, item):
         '''Update detailed file info'''
         if item == None:
-            #Clear if none is selected
+            # Clear if none is selected
             self.gui.detailsBrowser.setPlainText('')
         else:
             self.gui.detailsBrowser.setHtml('<p>Size: ' + str(item.size)
@@ -78,18 +78,18 @@ class Form(QtGui.QWidget):
 
     def callback(self, filename):
         '''Callback from scanner with current file name.'''
-        #Update label and repaint
+        # Update label and repaint
         self.gui.statusLabel.setText(filename)
         self.gui.statusLabel.repaint()
 
     def scan(self):
         '''Scan a directory.'''
         self.gui.statusLabel.setText('Scanning...')
-        #Get path
+        # Get path
         directory = self.gui.pathEdit.text()
-        #Overwrite calback function
+        # Overwrite calback function
         scanner.callback = self.callback
-        #Try scanning for duplicates
+        # Try scanning for duplicates
         try:
             self.files = scanner.collect_files(directory, self.gui.caseSense.checkState())
             self.updateDupWidget()
@@ -103,7 +103,7 @@ class Form(QtGui.QWidget):
                                                           caption='Select directory.',
                                                           directory=self.gui.pathEdit.text(),
                                                           options=QtGui.QFileDialog.ShowDirsOnly)
-        #Update edit widget
+        # Update edit widget
         self.gui.pathEdit.setText(filename)
 
     def addFile(self):
@@ -119,7 +119,7 @@ class Form(QtGui.QWidget):
         item = self.gui.selectedWidget.selectedItems()[0].text()
         del self.selected[item]
         # Update the view
-        self.updateSeletedWidget()''
+        self.updateSeletedWidget()
 
     def deleteFiles(self):
         '''Delete all files in the selected list.'''
@@ -128,7 +128,7 @@ class Form(QtGui.QWidget):
     def updateSeletedWidget(self):
         '''Update the dup list in the GUI.'''
         self.gui.selectedWidget.clear()
-        #Loop over each name
+        # Loop over each name
         for entry in self.selected.values():
             item = QtGui.QListWidgetItem(entry.uniqueName)
             self.gui.selectedWidget.addItem(item)
