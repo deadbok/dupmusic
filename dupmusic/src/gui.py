@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dupmusic.ui'
 #
-# Created: Mon Dec  3 22:55:48 2012
+# Created: Mon Dec  3 23:22:38 2012
 #      by: PyQt4 UI code generator 4.9.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,9 +20,9 @@ class Ui_Form(object):
         Form.resize(641, 448)
         self.gridLayout_2 = QtGui.QGridLayout(Form)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
-        self.listWidget = QtGui.QListWidget(Form)
-        self.listWidget.setObjectName(_fromUtf8("listWidget"))
-        self.gridLayout_2.addWidget(self.listWidget, 6, 2, 1, 1)
+        self.selectedWidget = QtGui.QListWidget(Form)
+        self.selectedWidget.setObjectName(_fromUtf8("selectedWidget"))
+        self.gridLayout_2.addWidget(self.selectedWidget, 6, 2, 1, 1)
         self.line_4 = QtGui.QFrame(Form)
         self.line_4.setFrameShape(QtGui.QFrame.VLine)
         self.line_4.setFrameShadow(QtGui.QFrame.Sunken)
