@@ -44,6 +44,7 @@ class Dup(object):
             tag = auto.File(filename)
             self.duration = tag.duration
 
+
 def callback(parent=None, filename=''):
     print(filename)
 

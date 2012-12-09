@@ -11,7 +11,7 @@ import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.9.1"
+__version__ = "0.9.2"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
@@ -123,6 +123,9 @@ class Form(QtGui.QWidget):
         '''Add a file to the selected list.'''
         try:
             item = self.gui.filesWidget.selectedItems()[0]
+            if len(item.uniqueName) == 3:
+                # Get filename if only extension is unique
+                item.uniqueName = os.path.basename(item.fullpath)
             # Insert the item, the key is the unique part of the name
             self.selected[item.uniqueName] = item
             # Update the view
@@ -181,7 +184,6 @@ class Selected(scanner.Dup, QtGui.QListWidgetItem):
         self.duration = dup.duration
 
         self.setText(self.uniqueName)
-
 
 
 class QDup(scanner.Dup, QtGui.QListWidgetItem):
