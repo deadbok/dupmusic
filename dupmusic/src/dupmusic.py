@@ -11,7 +11,7 @@ import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
@@ -91,7 +91,12 @@ class Form(QtGui.QWidget):
 
     def scan(self):
         '''Scan a directory.'''
+        self.gui.dupWidget.clear()
+        self.gui.filesWidget.clear()
+        self.gui.detailsBrowser.setPlainText('')
+        self.gui.selectedWidget.clear()
         self.gui.statusLabel.setText('Scanning...')
+        self.gui.statusLabel.repaint()
         # Get path
         directory = self.gui.pathEdit.text()
         # Overwrite calback function
@@ -150,6 +155,8 @@ class Form(QtGui.QWidget):
                     os.remove(item.fullpath)
                 except OSError as exception:
                     QtGui.QMessageBox.critical(self, 'Error!', str(exception))
+        self.selected.clear()
+        self.updateSeletedWidget()
 
     def updateSeletedWidget(self):
         '''Update the dup list in the GUI.'''
