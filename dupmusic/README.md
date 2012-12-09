@@ -1,0 +1,1 @@
+Duplicate file finder with digital music in mind.
