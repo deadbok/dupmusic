@@ -5,12 +5,13 @@ Scan a music collection for possible duplicates.
 @author: oblivion
 '''
 import sys
+import os
 import datetime
 import scanner
 import gui
 from PyQt4 import QtCore, QtGui
 
-__version__ = "0.5.0"
+__version__ = "0.9.0"
 
 class Form(QtGui.QWidget):
     '''GUI application part.'''
@@ -138,16 +139,42 @@ class Form(QtGui.QWidget):
         '''Delete all files in the selected list.'''
         # Get all items.
         items = self.gui.selectedWidget.findItems('*', QtCore.Qt.MatchWrap | QtCore.Qt.MatchWildcard)
-        for item in items:
-            print(item.text())
+        ret = QtGui.QMessageBox.warning(self, 'Warning!',
+                                        'The files can not be restored.',
+                                        QtGui.QMessageBox.Ok,
+                                        QtGui.QMessageBox.Cancel,
+                                        QtGui.QMessageBox.NoButton)
+        if ret == QtGui.QMessageBox.Ok:
+            for item in items:
+                try:
+                    os.remove(item.fullpath)
+                except OSError as exception:
+                    QtGui.QMessageBox.critical(self, 'Error!', str(exception))
 
     def updateSeletedWidget(self):
         '''Update the dup list in the GUI.'''
         self.gui.selectedWidget.clear()
         # Loop over each name
         for entry in self.selected.values():
-            item = QtGui.QListWidgetItem(entry.uniqueName)
+            item = Selected(entry)
             self.gui.selectedWidget.addItem(item)
+
+
+class Selected(scanner.Dup, QtGui.QListWidgetItem):
+    '''Ties together data and listwidget items.'''
+    def __init__(self, dup, parent=None):
+        '''Init.'''
+        scanner.Dup.__init__(self)
+        QtGui.QListWidgetItem.__init__(self)
+
+        self.fullpath = dup.fullpath
+        self.size = dup.size
+        self.extension = dup.extension
+        self.uniqueName = dup.uniqueName
+        self.duration = dup.duration
+
+        self.setText(self.uniqueName)
+
 
 
 class QDup(scanner.Dup, QtGui.QListWidgetItem):
