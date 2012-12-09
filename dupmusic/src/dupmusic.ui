@@ -76,24 +76,6 @@
                </property>
               </widget>
              </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Max. difference.</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSlider" name="diffSlider">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
             </layout>
            </item>
           </layout>
@@ -247,7 +229,6 @@
   <tabstop>browseButton</tabstop>
   <tabstop>goButton</tabstop>
   <tabstop>caseSense</tabstop>
-  <tabstop>diffSlider</tabstop>
   <tabstop>dupWidget</tabstop>
   <tabstop>filesWidget</tabstop>
   <tabstop>detailsBrowser</tabstop>

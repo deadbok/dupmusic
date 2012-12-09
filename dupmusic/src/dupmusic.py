@@ -27,7 +27,7 @@ class Form(QtGui.QWidget):
         self.gui.setupUi(self)
         self.callbacks = 0
 
-        self.gui.pathEdit.setText('/media/7c06c506-b8da-48b2-a5b2-d6a5dabd2e2e/Music.mix')
+        self.gui.pathEdit.setText('.')
 
         # Go click
         self.connect(self.gui.goButton, QtCore.SIGNAL('clicked()'), self.scan)
@@ -82,8 +82,9 @@ class Form(QtGui.QWidget):
         # Update label and repaint
         self.gui.statusLabel.setText(filename)
         # Don't repaint every time
-        if self.callbacks == 10:
+        if self.callbacks == 0:
             self.gui.statusLabel.repaint()
+        if self.callbacks == 10:
             self.callbacks = -1
         self.callbacks += 1
 
@@ -96,7 +97,8 @@ class Form(QtGui.QWidget):
         scanner.callback = self.callback
         # Try scanning for duplicates
         try:
-            self.files = scanner.collect_files(directory, self.gui.caseSense.checkState())
+            self.files = scanner.collect_files(directory,
+                                               self.gui.caseSense.checkState())
             self.updateDupWidget()
         except OSError as exception:
             QtGui.QMessageBox.critical(self, 'Error!', str(exception))
@@ -113,22 +115,31 @@ class Form(QtGui.QWidget):
 
     def addFile(self):
         '''Add a file to the selected list.'''
-        item = self.gui.filesWidget.selectedItems()[0]
-        # Insert the item, the key is the unique part of the name
-        self.selected[item.uniqueName] = item
-        # Update the view
-        self.updateSeletedWidget()
+        try:
+            item = self.gui.filesWidget.selectedItems()[0]
+            # Insert the item, the key is the unique part of the name
+            self.selected[item.uniqueName] = item
+            # Update the view
+            self.updateSeletedWidget()
+        except IndexError:
+            pass
 
     def removeFile(self):
         '''Remove a file from the selected list.'''
-        item = self.gui.selectedWidget.selectedItems()[0].text()
-        del self.selected[item]
-        # Update the view
-        self.updateSeletedWidget()
+        try:
+            item = self.gui.selectedWidget.selectedItems()[0].text()
+            del self.selected[item]
+            # Update the view
+            self.updateSeletedWidget()
+        except IndexError:
+            pass
 
     def deleteFiles(self):
         '''Delete all files in the selected list.'''
-        pass
+        # Get all items.
+        items = self.gui.selectedWidget.findItems('*', QtCore.Qt.MatchWrap | QtCore.Qt.MatchWildcard)
+        for item in items:
+            print(item.text())
 
     def updateSeletedWidget(self):
         '''Update the dup list in the GUI.'''

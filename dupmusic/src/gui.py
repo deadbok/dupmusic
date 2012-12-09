@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dupmusic.ui'
 #
-# Created: Tue Dec  4 17:30:25 2012
+# Created: Sun Dec  9 10:11:25 2012
 #      by: PyQt4 UI code generator 4.9.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -59,16 +59,6 @@ class Ui_Form(object):
         self.caseSense = QtGui.QCheckBox(Form)
         self.caseSense.setObjectName(_fromUtf8("caseSense"))
         self.horizontalLayout_2.addWidget(self.caseSense)
-        self.verticalLayout_2 = QtGui.QVBoxLayout()
-        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.label = QtGui.QLabel(Form)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout_2.addWidget(self.label)
-        self.diffSlider = QtGui.QSlider(Form)
-        self.diffSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.diffSlider.setObjectName(_fromUtf8("diffSlider"))
-        self.verticalLayout_2.addWidget(self.diffSlider)
-        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
         self.verticalLayout_7.addLayout(self.horizontalLayout_2)
         self.verticalLayout_8.addLayout(self.verticalLayout_7)
         self.verticalLayout_9.addLayout(self.verticalLayout_8)
@@ -155,8 +145,7 @@ class Ui_Form(object):
         Form.setTabOrder(self.pathEdit, self.browseButton)
         Form.setTabOrder(self.browseButton, self.goButton)
         Form.setTabOrder(self.goButton, self.caseSense)
-        Form.setTabOrder(self.caseSense, self.diffSlider)
-        Form.setTabOrder(self.diffSlider, self.dupWidget)
+        Form.setTabOrder(self.caseSense, self.dupWidget)
         Form.setTabOrder(self.dupWidget, self.filesWidget)
         Form.setTabOrder(self.filesWidget, self.detailsBrowser)
         Form.setTabOrder(self.detailsBrowser, self.addButton)
@@ -171,7 +160,6 @@ class Ui_Form(object):
         self.goButton.setText(QtGui.QApplication.translate("Form", "Go", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("Form", "Options:", None, QtGui.QApplication.UnicodeUTF8))
         self.caseSense.setText(QtGui.QApplication.translate("Form", "Case sensitive", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Form", "Max. difference.", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Form", "Dups:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("Form", "Details:", None, QtGui.QApplication.UnicodeUTF8))
         self.addButton.setText(QtGui.QApplication.translate("Form", "-> Add", None, QtGui.QApplication.UnicodeUTF8))

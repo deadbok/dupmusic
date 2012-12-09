@@ -35,22 +35,32 @@ class Dup(object):
         self.uniqueName = ''
         self.duration = ''
 
+    def set(self, filename):
+        self.fullpath = filename
+        self.size = os.path.getsize(filename)
+        (_, self.extension) = os.path.splitext(filename)
+        # Meta-data
+        if not os.path.isdir(filename):
+            tag = auto.File(filename)
+            self.duration = tag.duration
+
 def callback(parent=None, filename=''):
     print(filename)
 
 def collect_files(directory, case_sensitive=True):
-    '''Create a list of possibly duplicate files.0'''
+    '''Create a list of possibly duplicate files.'''
     files = listdirs(directory)
     # Use a set to detect duplicates
     unique_files = set()
+    unique_files.add('.')
     dups = dict()
     firsts = dict()
 
     # Run through all files
     for filename in files:
-        callback(filename)
         # Ignore directories
         if not os.path.isdir(filename):
+            callback(filename)
             # Remove extension
             (noext, _) = os.path.splitext(filename)
             # Remove path
@@ -58,37 +68,27 @@ def collect_files(directory, case_sensitive=True):
                 name = os.path.basename(noext).strip()
             else:
                 name = os.path.basename(noext).strip().lower()
+
+            # Check if the name is known
             if name in unique_files:
                 # Save data
                 dup = Dup()
-                dup.fullpath = filename
-                dup.size = os.path.getsize(filename)
-                (_, dup.extension) = os.path.splitext(filename)
-                # metadata
-                tag = auto.File(filename)
-                dup.duration = tag.duration
+                dup.set(filename)
 
                 # If we are the first
                 if name not in dups:
                     dups[name] = list()
                     # Add first occurrence
-                    # metadata
-                    tag = auto.File(firsts[name].fullpath)
-                    firsts[name].duration = tag.duration
-
-                    dups[name].append(firsts[name])
+                    first = Dup()
+                    first.set(firsts[name])
+                    dups[name].append(first)
                 # Add duplicate
                 dups[name].append(dup)
             else:
                 # First occurrence
                 unique_files.add(name)
-                # Save data for later
-                first = Dup()
-                first.fullpath = filename
-                first.size = os.path.getsize(filename)
-                (_, first.extension) = os.path.splitext(filename)
                 # Save data in dictionary of first occurrences
-                firsts[name] = first
+                firsts[name] = filename
     # Find unique part
     for dup_list in dups.values():
         # Get common part
