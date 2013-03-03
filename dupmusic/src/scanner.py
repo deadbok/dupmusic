@@ -71,6 +71,18 @@ def collect_files(directory, case_sensitive=True):
                 name = os.path.basename(noext).strip().lower()
 
             # Check if the name is known
+            for cname in files:
+                if cname.find(name) > -1:
+                    if cname != filename:
+                        # If we are the first
+                        if name not in dups:
+                            dups[name] = list()
+                        # Save data
+                        dup = Dup()
+                        dup.set(filename)
+                        # Add duplicate
+                        dups[name].append(dup)
+
             if name in unique_files:
                 # Save data
                 dup = Dup()
